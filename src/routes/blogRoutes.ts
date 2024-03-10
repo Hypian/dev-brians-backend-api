@@ -1,6 +1,15 @@
-import express from 'express';
-import { createBlog, getBlogs,getSingleBlog, editBlog, deleteBlog } from '../controllers/blogController';
-import { authenticateToken, authorizeAdmin } from '../middleware/authMiddleware';
+import express from "express";
+import {
+  createBlog,
+  getBlogs,
+  getSingleBlog,
+  editBlog,
+  deleteBlog,
+} from "../controllers/blogController";
+import {
+  authenticateToken,
+  authorizeAdmin,
+} from "../middleware/authMiddleware";
 
 const router = express.Router();
 
@@ -16,7 +25,7 @@ const router = express.Router();
  * /blogs:
  *   post:
  *     summary: Create a new blog post
- *     tags: [Blogs] 
+ *     tags: [Blogs]
  *     description: Creates a new blog post with the provided title, image, and description.
  *     requestBody:
  *       required: true
@@ -40,7 +49,7 @@ const router = express.Router();
  *         description: Internal server error
  */
 
-router.post('/', authenticateToken, authorizeAdmin, createBlog);
+router.post("/", authenticateToken, authorizeAdmin, createBlog);
 
 /**
  * @swagger
@@ -56,14 +65,14 @@ router.post('/', authenticateToken, authorizeAdmin, createBlog);
  *         description: Internal server error
  */
 
-router.get('/', getBlogs);
+router.get("/", getBlogs);
 
 /**
  * @swagger
- * /blogs/{id}: 
+ * /blogs/{id}:
  *   get:
  *     summary: Get a blog post by ID
- *     tags: [Blogs] 
+ *     tags: [Blogs]
  *     description: Retrieve a single blog post by its ID.
  *     parameters:
  *       - in: path
@@ -81,7 +90,7 @@ router.get('/', getBlogs);
  *         description: Internal server error
  */
 
-router.get('/:id', authenticateToken, getSingleBlog);
+router.get("/:id", authenticateToken, getSingleBlog);
 
 /**
  * @swagger
@@ -121,7 +130,7 @@ router.get('/:id', authenticateToken, getSingleBlog);
  *         description: Internal server error
  */
 
-router.put('/:id', authenticateToken, authorizeAdmin, editBlog);
+router.put("/:id", authenticateToken, authorizeAdmin, editBlog);
 
 /**
  * @swagger
@@ -146,6 +155,6 @@ router.put('/:id', authenticateToken, authorizeAdmin, editBlog);
  *         description: Internal server error
  */
 
-router.delete('/:id', authenticateToken, authorizeAdmin, deleteBlog);
+router.delete("/:id", authenticateToken, authorizeAdmin, deleteBlog);
 
 export default router;
