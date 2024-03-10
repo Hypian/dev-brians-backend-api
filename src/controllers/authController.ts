@@ -20,14 +20,14 @@ export const signup = async (req: Request, res: Response) => {
       return res.status(400).json({ message: error.details[0].message });
     }
 
-    const { username, email, password } = req.body;
+    const { email, password } = req.body;
     const existingUser = await User.findOne({ email });
     if (existingUser) {
       return res.status(400).json({ message: "Email already exists" });
     }
 
     const hashedPassword = await bcrypt.hash(password, 10);
-    const newUser = new User({ username, email, password: hashedPassword });
+    const newUser = new User({ email, password: hashedPassword });
     await newUser.save();
 
     res.status(201).json({ message: "User created successfully" });
@@ -53,30 +53,22 @@ export const login = async (req: Request, res: Response) => {
   }
 };
 
-// Create admin user endpoint
+// Create admin login endpoint
 export const adminLogin = async (req: Request, res: Response) => {
   try {
-    // Validate request payload
-    const { error } = signupSchema.validate(req.body);
-    if (error) {
-      return res.status(400).json({ message: error.details[0].message });
-    }
-
     const { email, password } = req.body;
-    const existingUser = await User.findOne({ email });
-    if (existingUser) {
-      return res.status(400).json({ message: "Email already exists" });
+
+    // Hardcoded email and password from frontend
+    const hardcodedEmail = "admin@example.com";
+    const hardcodedPassword = "adminpassword";
+
+    // Check if the provided credentials match the hardcoded ones
+    if (email !== hardcodedEmail || password !== hardcodedPassword) {
+      return res.status(401).json({ message: "Invalid email or password" });
     }
 
-    const hashedPassword = await bcrypt.hash(password, 10);
-    const newUser = new User({
-      email,
-      password: hashedPassword,
-      role: "admin",
-    }); // Set role to 'admin'
-    await newUser.save();
-
-    res.status(201).json({ message: "Admin user created successfully" });
+    // If the credentials are correct, return success message
+    res.status(200).json({ message: "Admin login successful" });
   } catch (err) {
     res.status(500).json({ message: "Internal server error" });
   }
