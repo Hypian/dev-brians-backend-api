@@ -8,7 +8,7 @@ interface AuthRequest extends Request {
 
 
 // Authentication middleware function
-const jwtSecret = process.env.JWT_SECRET || 'brian';
+const jwtSecret = process.env.JWT_SECRET || '';
 
 export const authenticateToken = (req: AuthRequest, res: Response, next: any) => {
     const authHeader = req.headers['authorization'];

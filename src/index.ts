@@ -2,31 +2,29 @@ import express from "express";
 import mongoose from "mongoose";
 import bodyParser from "body-parser";
 import dotenv from "dotenv";
-import authRoutes from "./routes/authRoutes";
-import blogRoutes from "./routes/blogRoutes";
-import messageRoutes from "./routes/messageRoutes";
 import userRoutes from "./routes/userRoutes";
 import likeRoutes from "./routes/likesRoutes";
 import commentRoutes from "./routes/commentsRoutes";
+import authRoutes from "./routes/authRoutes";
+import blogRoutes from "./routes/blogRoutes";
+import messageRoutes from "./routes/contactFormRoutes";
 import swaggerUi from "swagger-ui-express";
 import swaggerJsdoc from "swagger-jsdoc";
+import { contactFormSchema } from "./utils/validation";
+import contactFormRoutes from "./routes/contactFormRoutes";
 
 dotenv.config();
 
 const app = express();
-const PORT = process.env.PORT || 5000;
+const PORT = process.env.PORT;
 
 // Middleware
 app.use(bodyParser.json());
-// Define a route handler for the root URL
-app.get("/", (_req, res) => {
-  res.send("Welcome to the API!");
-});
 
 // Routes
 app.use("/api/auth", authRoutes);
 app.use("/api/blogs", blogRoutes);
-app.use("/api/messages", messageRoutes);
+app.use("/api/messages", contactFormRoutes);
 app.use("/api/users", userRoutes);
 app.use("/api/likes", likeRoutes);
 app.use("/api/comments", commentRoutes);
@@ -36,14 +34,13 @@ const swaggerOptions = {
   swaggerDefinition: {
     openapi: "3.0.0",
     info: {
-      title: "api-doc",
+      title: "API Documentation",
       version: "1.0.0",
-      description: "",
+      description: "API documentation for your application.",
     },
     servers: [
       {
         url: `http://localhost:${PORT}`,
-        description: "",
       },
     ],
     components: {
@@ -57,11 +54,9 @@ const swaggerOptions = {
     },
     security: [{ bearerAuth: [] }],
   },
-
-  apis: ["./src/routes/*.ts"], // Path to the files containing your route definitions
+  apis: ["./src/routes/*.ts"],
 };
 
-// Swagger setup
 const swaggerSpec = swaggerJsdoc(swaggerOptions);
 app.use("/api-docs", swaggerUi.serve, swaggerUi.setup(swaggerSpec));
 
@@ -69,14 +64,13 @@ app.use("/api-docs", swaggerUi.serve, swaggerUi.setup(swaggerSpec));
 const mongoURI = process.env.MONGODB_URI;
 if (!mongoURI) {
   console.error("MongoDB URI is not defined");
-  process.exit(1); // Exit the process with an error code
+  process.exit(1);
 }
 
 mongoose
   .connect(mongoURI)
   .then(() => {
     console.log("Connected to MongoDB");
-    // Start the server
     app.listen(PORT, () => {
       console.log(`Server is running on http://localhost:${PORT}`);
     });

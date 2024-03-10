@@ -3,7 +3,6 @@ import { Schema, model, Document } from 'mongoose';
 interface adblog extends Document {
         title: string;
         text: string;
-        likesCount: number;
         likes: string[];
         comments: Array<{ text: string; user: string }>;
 }

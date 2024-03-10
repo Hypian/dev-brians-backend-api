@@ -14,12 +14,12 @@ export const signupSchema = Joi.object({
 
 export const loginSchema = Joi.object({
   email: Joi.string()
-    .regex(/^\S+@\S+\.\S{2,}$/)
+    .regex(/^\S+@[A-Za-z0-9.-]+\.\S{2,}$/)
     .lowercase()
     .required()
     .messages({
-      "string.pattern.base":
-        "Please enter a valid email address in the format name@example.example",
+      alert:
+        "Kindly input a valid email address following the pattern: name@example.com",
     }),
   password: Joi.string().required(),
 });
@@ -32,12 +32,11 @@ export const blogSchema = Joi.object({
 export const contactFormSchema = Joi.object({
   fullname: Joi.string().required(),
   email: Joi.string()
-    .regex(/^\S+@\S+\.\S{2,}$/)
-    .lowercase()
+    .regex(/^\S+@[A-Za-z0-9.-]+\.\S{2,}$/)
     .required()
     .messages({
-      "string.pattern.base":
-        "Please enter a valid email address in the format name@example.example",
+      alert:
+        "Kindly input a valid email address following the pattern: name@example.com",
     }),
   message: Joi.string().required(),
 });

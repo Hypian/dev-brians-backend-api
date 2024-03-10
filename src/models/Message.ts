@@ -1,6 +1,6 @@
 import { Schema, model, Document } from 'mongoose';
 
-interface IMessage extends Document {
+interface interfacemessage extends Document {
     fullname: string;
     email: string;
     message: string;
@@ -12,4 +12,4 @@ const MessageSchema = new Schema({
     message: String
 });
 
-export default model<IMessage>('Message', MessageSchema);
+export default model<interfacemessage>('Message', MessageSchema);
