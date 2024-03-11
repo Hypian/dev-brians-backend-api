@@ -53,7 +53,7 @@ export const login = async (req: Request, res: Response) => {
   }
 };
 
-// Create admin login endpoint
+//admin login endpoint
 export const adminLogin = async (req: Request, res: Response) => {
   try {
     const { email, password } = req.body;
