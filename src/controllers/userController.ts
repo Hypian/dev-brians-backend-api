@@ -10,4 +10,3 @@ export const getUsers = async (req: Request, res: Response) => {
     }
 };
 
-// Other user-related functions can be added similarly

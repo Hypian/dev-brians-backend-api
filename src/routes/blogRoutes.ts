@@ -21,7 +21,7 @@ const router = express.Router();
  */
 
 /**
- * @swagger
+  @swagger
  * /blogs:
  *   post:
  *     summary: Create a new blog post

@@ -40,3 +40,14 @@ export const contactFormSchema = Joi.object({
     }),
   message: Joi.string().required(),
 });
+
+export const adminLoginSchema = Joi.object({
+  email: Joi.string()
+    .regex(/^\S+@[A-Za-z0-9.-]+\.\S{2,}$/)
+    .required()
+    .messages({
+      alert:
+        "Kindly input a valid email address following the pattern: name@example.com",
+    }),
+  password: Joi.string().required(),
+});
