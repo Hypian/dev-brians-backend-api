@@ -49,7 +49,7 @@ const router = express.Router();
  *         description: Internal server error
  */
 
-router.post("/", authenticateToken, authorizeAdmin, createBlog);
+router.post("/", authenticateToken, createBlog);
 
 /**
  * @swagger

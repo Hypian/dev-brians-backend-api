@@ -1,7 +1,7 @@
 import { Request, Response } from "express";
 import dotenv from "dotenv";
 import bcrypt from "bcrypt";
-import jwt from "jsonwebtoken";
+import jwt, { Secret } from "jsonwebtoken";
 import User from "../models/User";
 import {
   signupSchema,
@@ -39,7 +39,7 @@ export const signup = async (req: Request, res: Response) => {
   } catch (err) {
     res.status(500).json({ message: "Internal server error" });
   }
-}; //login ep
+};
 export const login = async (req: Request, res: Response) => {
   try {
     const { error } = loginSchema.validate(req.body);
@@ -49,24 +49,26 @@ export const login = async (req: Request, res: Response) => {
 
     const { email, password } = req.body;
     const user = await User.findOne({ email });
+
     if (!user || !(await bcrypt.compare(password, user.password))) {
       return res.status(401).json({ message: "Invalid email or password" });
     }
+
+    // Generate JWT token
+    const token = jwt.sign({ id: user._id }, process.env.JWT_SECRET || "", {
+      expiresIn: "1h", // Token expires in 1 hour
+    });
+
+    // Return token to the client
+    res.status(200).json({ token });
   } catch (err) {
+    console.error("Login error:", err);
     res.status(500).json({ message: "Internal server error" });
   }
 };
 
-//admin login endpoint
 export const adminLogin = async (req: Request, res: Response) => {
   try {
-    // Validate request body against adminLoginSchema
-    const { error } = adminLoginSchema.validate(req.body);
-    if (error) {
-      return res.status(400).json({ message: error.details[0].message });
-    }
-
-    // Proceed with the login logic
     const { email, password } = req.body;
 
     // Hardcoded email and password from frontend
@@ -78,9 +80,19 @@ export const adminLogin = async (req: Request, res: Response) => {
       return res.status(401).json({ message: "Invalid email or passcode" });
     }
 
-    // If the credentials are correct, return success message
-    res.status(200).json({ message: "Admin login successfull" });
+    // If the credentials are correct, generate a JWT token
+    const token = jwt.sign(
+      { email: adminEmail },
+      process.env.JWT_SECRET as Secret,
+      {
+        expiresIn: "1h", // Token expiration time
+      }
+    );
+
+    // Return the token along with the success message
+    res.status(200).json({ message: "Admin login successful", token });
   } catch (err) {
+    console.error(err);
     res.status(500).json({ message: "Internal server error" });
   }
 };

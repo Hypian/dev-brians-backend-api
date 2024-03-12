@@ -1,20 +1,34 @@
 import { Request, Response } from "express";
 import Blog from "../models/Blog";
 import { blogSchema } from "../utils/validation";
-// Create Blog Post
+import User from "../models/User";
+import bcrypt from "bcrypt";
+
 export const createBlog = async (req: Request, res: Response) => {
   try {
-    const { title, description, author, date } = req.body;
-    const newBlog = new Blog({ title, description});
+    // Retrieve the hardcoded admin email from environment variables
+    const adminEmail = process.env.ADMIN_EMAIL || ""; // Default value is empty string if not found
+
+    // Check if the provided email exists in the users collection
+    const admin = await User.findOne({ email: adminEmail });
+    if (!admin) {
+      return res
+        .status(401)
+        .json({ message: "Unauthorized: Admin email not found" });
+    }
+
+    // Proceed with creating the blog post
+    const { title, description } = req.body;
+    const newBlog = new Blog({ title, description });
     await newBlog.save();
     res
       .status(201)
       .json({ message: "Blog post created successfully", blog: newBlog });
   } catch (err) {
+    console.error("Error creating blog:", err);
     res.status(500).json({ message: "Internal server error" });
   }
 };
-
 // Retrieve Blog Posts
 export const getBlogs = async (req: Request, res: Response) => {
   try {
