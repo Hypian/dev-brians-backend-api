@@ -1,6 +1,5 @@
 import express from "express";
 import { signup, login, adminLogin } from "../controllers/authController";
-
 const router = express.Router();
 
 /**
@@ -102,3 +101,7 @@ router.post("/login", login);
 router.post("/admin-login", adminLogin);
 
 export default router;
+
+router.get("/signup", (req, res) => {
+  // Handle GET request for signup page (e.g., render a signup form)
+});

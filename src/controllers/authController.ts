@@ -96,3 +96,13 @@ export const adminLogin = async (req: Request, res: Response) => {
     res.status(500).json({ message: "Internal server error" });
   }
 };
+// Endpoint to get all users
+export const getAllUsers = async (req: Request, res: Response) => {
+  try {
+    const users = await User.find();
+    res.status(200).json(users);
+  } catch (err) {
+    console.error(err);
+    res.status(500).json({ message: "Internal server error" });
+  }
+};

@@ -1,5 +1,5 @@
 import express from 'express';
-import { getMessages, sendMessage } from '../controllers/messageController';
+import { deleteMessage, getMessageById, getMessages, sendMessage, updateMessage } from '../controllers/messageController';
 import { authenticateToken, authorizeAdmin } from '../middleware/authMiddleware';
 
 const router = express.Router();
@@ -57,6 +57,6 @@ router.post('/', sendMessage);
  *         description: Internal server error
  */
 
-router.get('/', authenticateToken, authorizeAdmin, getMessages);
-
+router.get("/:id", getMessageById);
+router.delete("/:id",deleteMessage);
 export default router;

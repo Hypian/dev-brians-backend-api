@@ -24,7 +24,8 @@ const router = express.Router();
  *       500:
  *         description: Internal server error
  */
+router.post("/", authenticateToken,getUsers);
+router.get('/', authenticateToken,getUsers);
 
-router.get('/', authenticateToken, authorizeAdmin, getUsers);
 
 export default router;

@@ -1,19 +1,18 @@
-import { Schema, model, Document } from "mongoose";
+import { array } from "joi";
+import mongoose, { Schema, Document } from "mongoose";
 
-interface adblog extends Document {
+export interface IBlog extends Document {
   title: string;
-  text: string;
-  likes: boolean; // Changed type to boolean
-  comments: Array<{ text: string; user: string }>;
+  description: string;
+  likes: number;
+  comments: Comment[];
 }
 
-const BlogSchema = new Schema({
-  title: String,
-  text: String,
-  likes: { type: Boolean, default: false }, // Changed type to Boolean
-  comments: [
-    { text: String, user: { type: Schema.Types.ObjectId, ref: "User" } },
-  ],
+const blogSchema: Schema = new Schema({
+  title: { type: String, required: true },
+  description: { type: String, required: true },
+  likes: { type: Boolean, default: false },
+  comments: [{ type: String, required: true }],
 });
 
-export default model<adblog>("Blog", BlogSchema);
+export default mongoose.model<IBlog>("Blog", blogSchema);

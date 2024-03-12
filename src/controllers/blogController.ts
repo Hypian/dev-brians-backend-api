@@ -55,8 +55,8 @@ export const getSingleBlog = async (req: Request, res: Response) => {
 // Update Blog Post
 export const editBlog = async (req: Request, res: Response) => {
   try {
-    const { title, description } = req.body;
-    const updatedFields: any = { title, description };
+    const { title, text,likes,comments } = req.body;
+    const updatedFields: any = { title, text, likes, comments };
     const editedBlog = await Blog.findByIdAndUpdate(
       req.params.id,
       updatedFields,

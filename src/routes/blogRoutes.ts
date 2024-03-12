@@ -49,7 +49,7 @@ const router = express.Router();
  *         description: Internal server error
  */
 
-router.post("/", authenticateToken, createBlog);
+router.post("/", createBlog);
 
 /**
  * @swagger
@@ -90,7 +90,7 @@ router.get("/", getBlogs);
  *         description: Internal server error
  */
 
-router.get("/:id", authenticateToken, getSingleBlog);
+router.get("/:id", getSingleBlog);
 
 /**
  * @swagger
@@ -130,7 +130,7 @@ router.get("/:id", authenticateToken, getSingleBlog);
  *         description: Internal server error
  */
 
-router.put("/:id", authenticateToken, authorizeAdmin, editBlog);
+router.put("/:id",editBlog);
 
 /**
  * @swagger
@@ -155,6 +155,6 @@ router.put("/:id", authenticateToken, authorizeAdmin, editBlog);
  *         description: Internal server error
  */
 
-router.delete("/:id", authenticateToken, authorizeAdmin, deleteBlog);
+router.delete("/:id", deleteBlog);
 
 export default router;
