@@ -99,9 +99,31 @@ router.post("/login", login);
  */
 
 router.post("/admin-login", adminLogin);
+/**
+ * @swagger
+ * /admin-login:
+ *   post:
+ *     summary: Admin login
+ *     tags: [Authentication]
+ *     description: Authenticate admin credentials and generate a JWT token.
+ *     requestBody:
+ *       required: true
+ *       content:
+ *         application/json:
+ *           schema:
+ *             type: object
+ *             properties:
+ *               email:
+ *                 type: string
+ *               password:
+ *                 type: string
+ *     responses:
+ *       200:
+ *         description: Admin login successful
+ *       400:
+ *         description: Bad request, missing required parameters or invalid credentials
+ *       500:
+ *         description: Internal server error
+ */
 
 export default router;
-
-router.get("/signup", (req, res) => {
-  // Handle GET request for signup page (e.g., render a signup form)
-});

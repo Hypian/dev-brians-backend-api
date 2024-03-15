@@ -3,8 +3,6 @@ import mongoose from "mongoose";
 import bodyParser from "body-parser";
 import dotenv from "dotenv";
 import userRoutes from "./routes/userRoutes";
-import likeRoutes from "./routes/likesRoutes";
-import commentRoutes from "./routes/commentsRoutes";
 import authRoutes from "./routes/authRoutes";
 import blogRoutes from "./routes/blogRoutes";
 import messageRoutes from "./routes/contactFormRoutes";
@@ -26,8 +24,6 @@ app.use("/api/auth", authRoutes);
 app.use("/api/blogs", blogRoutes);
 app.use("/api/messages", contactFormRoutes);
 app.use("/api/users", userRoutes);
-app.use("/api/likes", likeRoutes);
-app.use("/api/comments", commentRoutes);
 
 // Swagger setup
 const swaggerOptions = {
@@ -40,7 +36,7 @@ const swaggerOptions = {
     },
     servers: [
       {
-        url: `http://localhost:${PORT}`,
+        url: `http://localhost:${5000}`,
       },
     ],
     components: {

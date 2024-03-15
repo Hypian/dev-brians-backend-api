@@ -1,4 +1,4 @@
-import Joi from "joi";
+import Joi, { number } from "joi";
 
 export const signupSchema = Joi.object({
   email: Joi.string()
@@ -26,7 +26,9 @@ export const loginSchema = Joi.object({
 
 export const blogSchema = Joi.object({
   title: Joi.string().required(),
-  text: Joi.string().required(),
+  description: Joi.string().required(),
+  likes: Joi.number,
+  comment: Joi.string().required(),
 });
 
 export const contactFormSchema = Joi.object({

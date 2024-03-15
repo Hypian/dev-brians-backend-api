@@ -10,7 +10,7 @@ import {
   authenticateToken,
   authorizeAdmin,
 } from "../middleware/authMiddleware";
-
+import { adminLogin } from "../controllers/authController";
 const router = express.Router();
 
 /**
@@ -130,7 +130,7 @@ router.get("/:id", getSingleBlog);
  *         description: Internal server error
  */
 
-router.put("/:id",editBlog);
+router.put("/:id", editBlog);
 
 /**
  * @swagger

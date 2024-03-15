@@ -1,31 +1,20 @@
-import express from 'express';
-import { getUsers } from '../controllers/userController';
-import { authenticateToken, authorizeAdmin } from '../middleware/authMiddleware';
+import express from "express";
+import {
+  getUsers,
+  getUserById,
+  createUser,
+  updateUser,
+  deleteUser,
+} from "../controllers/userController";
+import { authorizeAdmin } from "../middleware/authMiddleware";
 
 const router = express.Router();
 
-/**
- * @swagger
- * tags:
- *   name: Users
- *   description: User operations
- */
-
-/**
- * @swagger
- * /users:
- *   get:
- *     summary: Get all users
- *     tags: [Users]
- *     description: Retrieve a list of all users.
- *     responses:
- *       200:
- *         description: A list of users
- *       500:
- *         description: Internal server error
- */
-router.post("/", authenticateToken,getUsers);
-router.get('/', authenticateToken,getUsers);
-
+router.get("/", getUsers);
+router.get("/:id", getUserById);
+router.post("/", createUser);
+router.put("/:id", updateUser);
+router.delete("/:id", deleteUser);
+router.delete("/", deleteUser);
 
 export default router;

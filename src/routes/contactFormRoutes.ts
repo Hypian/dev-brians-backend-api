@@ -1,9 +1,17 @@
-import express from 'express';
-import { deleteMessage, getMessageById, getMessages, sendMessage, updateMessage } from '../controllers/messageController';
-import { authenticateToken, authorizeAdmin } from '../middleware/authMiddleware';
+import express from "express";
+import {
+  deleteMessage,
+  getMessageById,
+  getMessages,
+  sendMessage,
+  updateMessage,
+} from "../controllers/messageController";
+import {
+  authenticateToken,
+  authorizeAdmin,
+} from "../middleware/authMiddleware";
 
 const router = express.Router();
-
 
 /**
  * @swagger
@@ -40,8 +48,7 @@ const router = express.Router();
  *       500:
  *         description: Internal server error
  */
-
-router.post('/', sendMessage);
+router.post("/", sendMessage);
 
 /**
  * @swagger
@@ -56,7 +63,54 @@ router.post('/', sendMessage);
  *       500:
  *         description: Internal server error
  */
+router.get("/", getMessages);
 
+/**
+ * @swagger
+ * /contact/{id}:
+ *   get:
+ *     summary: Get a message by ID
+ *     tags: [Messages]
+ *     description: Retrieve a single message by its ID.
+ *     parameters:
+ *       - in: path
+ *         name: id
+ *         required: true
+ *         schema:
+ *           type: string
+ *         description: The ID of the message
+ *     responses:
+ *       200:
+ *         description: A single message
+ *       404:
+ *         description: Message not found
+ *       500:
+ *         description: Internal server error
+ */
 router.get("/:id", getMessageById);
-router.delete("/:id",deleteMessage);
+
+/**
+ * @swagger
+ * /contact/{id}:
+ *   delete:
+ *     summary: Delete a message by ID
+ *     tags: [Messages]
+ *     description: Delete a message by its ID.
+ *     parameters:
+ *       - in: path
+ *         name: id
+ *         required: true
+ *         schema:
+ *           type: string
+ *         description: The ID of the message
+ *     responses:
+ *       200:
+ *         description: Message deleted successfully
+ *       404:
+ *         description: Message not found
+ *       500:
+ *         description: Internal server error
+ */
+router.delete("/:id", deleteMessage);
+
 export default router;

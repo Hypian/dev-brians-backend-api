@@ -1,13 +1,17 @@
-import { Schema, model, Document } from 'mongoose';
+// user.model.ts
 
-interface interfaceuser extends Document {
-    email: string;
-    password: string;
+import { Schema, model, Document } from "mongoose";
+
+export interface UserInterface extends Document {
+  email: string;
+  password: string;
+  isAdmin: boolean; // Add isAdmin property
 }
 
-const UserSchema = new Schema({
-    email: String,
-    password: String,
+const UserSchema = new Schema<UserInterface>({
+  email: String,
+  password: String,
+  isAdmin: { type: Boolean, default: false }, // Default isAdmin to false
 });
 
-export default model<interfaceuser>('User', UserSchema);
+export default model<UserInterface>("User", UserSchema);

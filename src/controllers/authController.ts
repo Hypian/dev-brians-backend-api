@@ -1,23 +1,23 @@
-import { Request, Response } from "express";
+import { NextFunction, Request, Response } from "express";
 import dotenv from "dotenv";
 import bcrypt from "bcrypt";
 import jwt, { Secret } from "jsonwebtoken";
-import User from "../models/User";
+import User from "../models/User"; // Assuming User model interface
 import {
   signupSchema,
   loginSchema,
   adminLoginSchema,
-} from "../utils/validation";
-import Joi from "joi";
+} from "../utils/validation"; // Assuming validation schema interfaces
 
 dotenv.config();
 
-const jwtSecret = process.env.JWT_SECRET;
+// Enforce JWT secret presence during runtime
+const jwtSecret: Secret = process.env.JWT_SECRET as Secret;
 
 if (!jwtSecret) {
-  console.error("JWT secret is not defined");
+  throw new Error("JWT secret is not defined in environment variables");
 }
-// signup ep
+
 export const signup = async (req: Request, res: Response) => {
   try {
     const { error } = signupSchema.validate(req.body);
@@ -37,9 +37,11 @@ export const signup = async (req: Request, res: Response) => {
 
     res.status(201).json({ message: "User created successfully" });
   } catch (err) {
+    console.error("Signup error:", err);
     res.status(500).json({ message: "Internal server error" });
   }
 };
+
 export const login = async (req: Request, res: Response) => {
   try {
     const { error } = loginSchema.validate(req.body);
@@ -55,54 +57,57 @@ export const login = async (req: Request, res: Response) => {
     }
 
     // Generate JWT token
-    const token = jwt.sign({ id: user._id }, process.env.JWT_SECRET || "", {
+    const token = jwt.sign({ id: user._id }, jwtSecret, {
       expiresIn: "1h", // Token expires in 1 hour
     });
 
-    // Return token to the client
-    res.status(200).json({ token });
+    // Return token and success message to the client
+    res.status(200).json({ message: "Login successful", token });
   } catch (err) {
     console.error("Login error:", err);
     res.status(500).json({ message: "Internal server error" });
   }
 };
 
-export const adminLogin = async (req: Request, res: Response) => {
+export const adminLogin = async (
+  req: Request,
+  res: Response,
+) => {
   try {
-    const { email, password } = req.body;
-
-    // Hardcoded email and password from frontend
-    const adminEmail: string = process.env.ADMIN_EMAIL ?? "";
-    const adminPassword: string = process.env.ADMIN_PASSCODE ?? "";
-
-    // Check if the provided credentials match the hardcoded ones
-    if (email !== adminEmail || password !== adminPassword) {
-      return res.status(401).json({ message: "Invalid email or passcode" });
+    const { error } = adminLoginSchema.validate(req.body);
+    if (error) {
+      return res.status(400).json({ message: error.details[0].message });
     }
 
-    // If the credentials are correct, generate a JWT token
+    const { email, password } = req.body;
+
+    // Find admin user by email
+    const existingAdmin = await User.findOne({ email });
+
+    if (!existingAdmin) {
+      // Admin user doesn't exist, consider returning an error or throwing an exception
+      return res.status(401).json({ message: "Unauthorized" }); // Consider a more informative message
+    }
+
+    // Verify password using bcrypt
+    const isMatch = await bcrypt.compare(password, existingAdmin.password);
+    if (!isMatch) {
+      return res.status(401).json({ message: "Invalid email or password" });
+    }
+
+    // Generate a JWT token with admin flag
     const token = jwt.sign(
-      { email: adminEmail },
-      process.env.JWT_SECRET as Secret,
+      { email, isAdmin: existingAdmin.isAdmin },
+      jwtSecret,
       {
-        expiresIn: "1h", // Token expiration time
+        expiresIn: "1h",
       }
     );
 
-    // Return the token along with the success message
+    // Return the token with success message (avoid sensitive data)
     res.status(200).json({ message: "Admin login successful", token });
   } catch (err) {
-    console.error(err);
-    res.status(500).json({ message: "Internal server error" });
-  }
-};
-// Endpoint to get all users
-export const getAllUsers = async (req: Request, res: Response) => {
-  try {
-    const users = await User.find();
-    res.status(200).json(users);
-  } catch (err) {
-    console.error(err);
-    res.status(500).json({ message: "Internal server error" });
+    console.error("Error during admin login:", err);
+    res.status(500).json({ message: "Internal server error" }); // Avoid specific error details in response
   }
 };
